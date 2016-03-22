@@ -1,8 +1,23 @@
+// vim: ft=groovy:sw=4:ts=4:expandtab
+
 apply plugin: 'java'
+apply plugin: 'idea'
 
 repositories {
     jcenter()
 }
 
 dependencies {
+}
+
+idea.project.ipr.withXml { xmlFile ->
+    def anno = xmlFile.asNode().component.find {
+        it.@name == 'CompilerConfiguration'
+    }['annotationProcessing']
+
+    anno[0].replaceNode {
+        annotationProcessing {
+            profile(default: true, name: 'Default', useClasspath: 'true', enabled: true)
+        }
+    }
 }
